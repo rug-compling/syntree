@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: nl.rug.syntree.Main
+SplashScreen-Image: resources/images/syntree.gif
+Class-Path: ./libraries/batik-anim.jar ./libraries/batik-awt-util.jar ./libraries/batik-bridge.jar ./libraries/batik-codec.jar ./libraries/batik-css.jar ./libraries/batik-dom.jar ./libraries/batik-ext.jar ./libraries/batik-extension.jar ./libraries/batik-gui-util.jar ./libraries/batik-gvt.jar ./libraries/batik-parser.jar ./libraries/batik-script.jar ./libraries/batik-svg-dom.jar ./libraries/batik-svggen.jar ./libraries/batik-swing.jar ./libraries/batik-transcoder.jar ./libraries/batik-util.jar ./libraries/batik-xml.jar ./libraries/js.jar ./libraries/pdf-transcoder.jar ./libraries/xalan-2.6.0.jar ./libraries/xerces_2_5_0.jar ./libraries/xml-apis-ext.jar ./libraries/xml-apis.jar

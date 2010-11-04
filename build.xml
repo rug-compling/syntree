@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+ syntree - syntax visualization and annotation software
+ Copyright (C) 2008, 2009  Harm Brouwer
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<project name="syntree" default="all" basedir=".">
+	<property name="build.dir" location="build"/>
+	<property name="src.dir" location="sources"/>
+	<property name="doc.dir" location="docs"/>
+	<property name="lib.dir" location="libraries"/>
+	<!--
+     ====================================================================
+     target: init
+     ====================================================================
+    -->
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+	</target>
+	<!--
+     ====================================================================
+     target: compile
+     ====================================================================
+    -->
+	<target name="compile">
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" deprecation="true">
+			<compilerarg value="-Xlint:unchecked"/>
+			<compilerarg value="-O"/>
+			<classpath id="compile.classpath">
+				<fileset dir="${lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	<!--
+     ====================================================================
+     target: package
+     ====================================================================
+    -->
+	<target name="package">
+		<jar destfile="syntree.jar" manifest="manifest.mf" basedir="${build.dir}">
+			<include name="**"/>
+			<fileset dir="${basedir}" includes="resources/icons/*.png"/>
+			<fileset dir="${basedir}" includes="resources/images/*"/>
+		</jar>
+	</target>
+	<!--
+     ====================================================================
+     target: all
+     ====================================================================
+    -->
+	<!-- <target name="all" depends="clean, init, compile, package"/> -->
+	<target name="all" depends="compile, package"/>
+	<!--
+     ====================================================================
+     target: clean
+     ====================================================================
+    -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete file="syntree.jar"/>
+	</target>
+	<!--
+     ====================================================================
+     target: run
+     ====================================================================
+    -->
+	<target name="run">
+		<java jar="syntree.jar" fork="true" maxmemory="512m">
+			<jvmarg value="-Dsun.java2d.pmoffscreen=false"/>
+			<jvmarg value="-Xms128m"/>
+			<jvmarg value="-Xmx512m"/>
+		</java>
+	</target>
+	<!--
+     ====================================================================
+     target: test
+     ====================================================================
+    -->
+	<target name="test" depends="all, run"/>
+	<!--
+     ====================================================================
+     target: javadoc
+     ====================================================================
+    -->
+	<target name="javadoc" depends="javadoc.clean, javadoc.init, javadoc.generate"/>
+	<!--
+     ====================================================================
+     target: javadoc.build
+     ====================================================================
+    -->
+	<target name="javadoc.init">
+		<mkdir dir="${doc.dir}"/>
+	</target>
+	<!--
+     ====================================================================
+     target: javadoc.build
+     ====================================================================
+    -->
+	<target name="javadoc.generate">
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" packagenames="*" author="true" private="true" version="true" use="yes">
+			<classpath id="compile.classpath">
+				<fileset dir="${lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<doclet name="org.umlgraph.doclet.UmlGraphDoc" path="${lib.dir}/UmlGraph-5.2.jar">
+				<param name="-attributes"/>
+				<param name="-operations"/>
+				<param name="-constructors"/>
+				<param name="-qualify"/>
+				<param name="-types"/>
+				<param name="-visibility"/>
+				<param name="-inferrel"/>
+			</doclet>
+		</javadoc>
+		<apply executable="dot" dest="${doc.dir}" parallel="false">
+			<arg value="-Tpng"/>
+			<arg value="-o"/>
+			<targetfile/>
+			<srcfile/>
+			<fileset dir="${doc.dir}" includes="*.dot"/>
+			<mapper type="glob" from="*.dot" to="*.png"/>
+		</apply>
+	</target>
+	<!--
+     ====================================================================
+     target: clean
+     ====================================================================
+    -->
+	<target name="javadoc.clean">
+		<delete dir="${doc.dir}"/>
+	</target>
+</project>

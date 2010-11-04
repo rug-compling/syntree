@@ -1,0 +1,1 @@
+java -Dsun.java2d.pmoffscreen=false -Xms256m -Xmx1024m -jar syntree.jar
